@@ -8,7 +8,7 @@ export type LlmParams = {
   presencePenalty?: number;
   systemPrompt: string;
   stream: boolean;
-  participantId: string;
+  // participantId: string;
 };
 
 export type ChatMessage = {
@@ -17,16 +17,10 @@ export type ChatMessage = {
 };
 
 export type Participant = {
-  // icon?: string;
+  icon?: string;
+  iconColor?: string;
   id: string;
   llmParams: LlmParams;
-  // systemPrompt: string;
-  //
-  // constructor(id: string, model: string, systemPrompt: string) {
-  //   this.id = id;
-  //   this.model = model;
-  //   this.systemPrompt = systemPrompt;
-  // }
 }
 
 export type LoadingType = 'idle' | 'stream' | 'message';

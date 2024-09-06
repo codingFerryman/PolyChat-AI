@@ -16,11 +16,30 @@
     </div>
     <UDivider/>
     <div class="p-4 flex-1 space-y-6 overflow-y-auto">
-      <ul>
-        <li v-for="participant in chatParticipants" :key="participant.id">
-          {{ participant.id }} - {{ participant.llmParams.model }} - {{ participant.llmParams.systemPrompt }}
-        </li>
-      </ul>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+        <tr v-for="participant in chatParticipants" :key="participant.id">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <UPopover mode="hover">
+              <Icon :name="`${participant.icon}`" :style="`color:${participant.iconColor}`"/>
+              <template #panel>
+                <UCard>
+                  <template #header>
+                    <p> {{ participant.llmParams }} </p>
+                  </template>
+                  <p> {{ participant.llmParams }} </p>
+                </UCard>
+              </template>
+            </UPopover>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ participant.llmParams.model }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

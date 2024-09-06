@@ -12,7 +12,6 @@
 <!--        @add-participants="addParticipant"-->
 <!--      />-->
 <!--    </USlideover>-->
-
     <div class="hidden md:block md:w-1/3 lg:w-1/4">
       <LlmSettings
           v-model:llmParams="llmParams"
@@ -54,7 +53,6 @@ const defaultSettings: LlmParams = {
   maxTokens: 512,
   systemPrompt: 'You are a helpful assistant.',
   stream: true,
-  participantId: '1',
 };
 
 const llmParams = reactive<LlmParams>({ ...defaultSettings });

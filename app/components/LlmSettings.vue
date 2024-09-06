@@ -132,6 +132,8 @@ const emit = defineEmits(['hideDrawer', 'reset', 'add-participant']);
 
 function addParticipant() {
   const newParticipant: Participant = {
+    icon: 'i-heroicons-sparkles',
+    iconColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
     id: Date.now().toString(), // Using the current timestamp as an ID
     llmParams: {...llmParams.value},
   };

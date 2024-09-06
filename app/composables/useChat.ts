@@ -1,9 +1,6 @@
-import { ref } from 'vue';
-import type {ChatMessage, LlmParams, LoadingType} from '~~/types';
+import type {ChatMessage, LlmParams} from '~~/types';
 
 export function useChat() {
-  const chatHistory = ref<ChatMessage[]>([]);
-  const loading = ref<LoadingType>('idle');
   async function* streamResponse(
     url: string,
     messages: ChatMessage[],
@@ -86,7 +83,5 @@ export function useChat() {
   return {
     getResponse,
     streamResponse,
-    chatHistory,
-    loading,
   };
 }
