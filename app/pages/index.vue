@@ -40,7 +40,7 @@ const defaultSettings: LlmParams = {
   temperature: 0.6,
   maxTokens: 512,
   systemPrompt: 'You are a helpful assistant.',
-  stream: true,
+  stream: false,
 };
 
 const llmParams = reactive<LlmParams>({ ...defaultSettings });
@@ -58,7 +58,7 @@ async function sendMessage(message: string) {
     if (llmParams.stream) {
       loading.value = 'stream';
       const messageGenerator = streamResponse(
-        '/api/chat',
+        llmParams.model.startsWith('@openai') ? '/api/openai' : '/api/nuxthub',
         chatHistory.value,
         llmParams
       );
@@ -81,7 +81,7 @@ async function sendMessage(message: string) {
     } else {
       loading.value = 'message';
       const response = await getResponse(
-        '/api/chat',
+          llmParams.model.startsWith('@openai') ? '/api/openai' : '/api/nuxthub',
         chatHistory.value,
         llmParams
       );

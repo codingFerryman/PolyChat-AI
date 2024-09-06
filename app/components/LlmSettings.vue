@@ -52,7 +52,8 @@
 
       <div class="flex items-center justify-between">
         <span>Stream Response</span>
-        <UToggle v-model="llmParams.stream" />
+        <UToggle v-model="llmParams.stream" :disabled="llmParams.model.startsWith('@openai')" />
+<!--       TODO: implement streaming for openai models-->
       </div>
 
       <UAccordion
@@ -74,6 +75,7 @@
             <RangeInput
               v-model="llmParams.topK"
               label="Top K"
+              :hidden="llmParams.model.startsWith('@openai')"
               :min="1"
               :max="50"
             />
@@ -128,6 +130,10 @@ const accordionItems = [
 ];
 
 const models = [
+  {
+    name: "gpt-4o-mini",
+    id: "@openai/gpt-4o-mini",
+  },
   {
     name: 'deepseek-coder-6.7b-base-awq',
     id: '@hf/thebloke/deepseek-coder-6.7b-base-awq',

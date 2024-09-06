@@ -1,4 +1,4 @@
-import type { ChatMessage, LlmParams } from '~~/types';
+import type {ChatMessage, LlmParams} from '~~/types';
 
 export function useChat() {
   async function* streamResponse(
@@ -66,15 +66,13 @@ export function useChat() {
     llmParams: LlmParams
   ) {
     try {
-      const response = await $fetch<string>(url, {
+      return await $fetch<string>(url, {
         method: 'POST',
         body: {
           messages,
           params: llmParams,
         },
       });
-
-      return response;
     } catch (error) {
       console.error('Error sending message:', error);
       throw error;
