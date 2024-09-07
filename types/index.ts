@@ -6,7 +6,8 @@ export type LlmParams = {
   topK?: number;
   frequencyPenalty?: number;
   presencePenalty?: number;
-  systemPrompt: string;
+  systemPrompt?: string;
+  // initialPrompt?: string;
   stream: boolean;
   // participantId: string;
 };
@@ -19,7 +20,8 @@ export type ChatMessage = {
 export type Participant = {
   icon?: string;
   iconColor?: string;
-  id: string;
+  id: number;
+  role?: string;
   llmParams: LlmParams;
 }
 

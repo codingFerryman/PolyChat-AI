@@ -41,7 +41,7 @@
           label="Max Tokens"
       />
 
-      <UFormGroup label="System Prompt">
+      <UFormGroup label="System Prompt (Persona)">
         <UTextarea
             v-model="llmParams.systemPrompt"
             :maxrows="8"
@@ -136,7 +136,7 @@ function addParticipant() {
   const newParticipant: Participant = {
     icon: 'i-heroicons-sparkles',
     iconColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
-    id: Date.now().toString(), // Using the current timestamp as an ID
+    id: Date.now(), // Using the current timestamp as an ID
     llmParams: {...llmParams.value},
   };
   console.log('llm:addParticipant', newParticipant);

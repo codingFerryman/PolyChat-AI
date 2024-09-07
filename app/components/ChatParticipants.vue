@@ -17,25 +17,25 @@
     <UDivider/>
     <div class="p-4 flex-1 space-y-6 overflow-y-auto">
       <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-        </thead>
+        <thead class="bg-gray-50"/>
         <tbody class="divide-y divide-gray-200">
         <tr v-for="participant in chatParticipants" :key="participant.id">
-          <td class="px-6 py-4 whitespace-nowrap">
+          <td class="px-2 py-2 whitespace-nowrap">
             <UPopover mode="hover">
               <Icon :name="`${participant.icon}`" :style="`color:${participant.iconColor}`"/>
               <template #panel>
-                <UCard>
-                  <template #header>
-                    <p> {{ participant.llmParams }} </p>
-                  </template>
-                  <p> {{ participant.llmParams }} </p>
-                </UCard>
+                <tr v-for="(value, key, index) in participant.llmParams" :key="key">
+                  <td>{{key}}: {{value}}</td>
+                </tr>
+                Joined: <NuxtTime :datetime="participant.id" month="long" day="numeric" hour="numeric" minute="numeric" second="numeric" />
               </template>
             </UPopover>
           </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            {{ participant.llmParams.model }}
+          <td class="px-4 py-4">
+            {{ participant.role }}
+          </td>
+          <td class="px-4 py-4 whitespace-nowrap">
+            {{ participant.llmParams.model.split("/").at(-1) }}
           </td>
         </tr>
         </tbody>
