@@ -50,11 +50,11 @@
         />
       </UFormGroup>
 
-      <div class="flex items-center justify-between">
-        <span>Stream Response</span>
-        <UToggle v-model="llmParams.stream" :disabled="llmParams.model.startsWith('@openai')" />
-<!--       TODO: implement streaming for openai models-->
-      </div>
+      <!--      <div class="flex items-center justify-between">-->
+      <!--        <span>Stream Response</span>-->
+      <!--        <UToggle v-model="llmParams.stream" :disabled="llmParams.model.startsWith('@openai')" />-->
+      <!--&lt;!&ndash;       TODO: implement streaming for openai models&ndash;&gt;-->
+      <!--      </div>-->
 
       <UAccordion
           :items="accordionItems"
@@ -73,11 +73,11 @@
             />
 
             <RangeInput
-              v-model="llmParams.topK"
-              label="Top K"
-              :hidden="llmParams.model.startsWith('@openai')"
-              :min="1"
-              :max="50"
+                v-model="llmParams.topK"
+                :hidden="llmParams.model.startsWith('@openai')"
+                :max="50"
+                :min="1"
+                label="Top K"
             />
 
             <RangeInput
@@ -115,8 +115,9 @@
       </UButton>
     </div>
     <div class="p-2">
-      <UButton color="gray" rel="noopener" size="sm" target="_blank" to="https://hub.nuxt.com?utm_source=hub-chat"
-               variant="link">Hosted on NuxtHub
+      <UButton
+          color="gray" rel="noopener" size="sm" target="_blank" to="https://hub.nuxt.com?utm_source=hub-chat"
+          variant="link">Hosted on NuxtHub
       </UButton>
     </div>
   </div>
@@ -135,11 +136,10 @@ const emit = defineEmits(['hideDrawer', 'reset', 'add-participant']);
 function addParticipant() {
   const newParticipant: Participant = {
     icon: 'i-heroicons-sparkles',
-    iconColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+    iconColor: '#' + (Math.random() * 0xFFFFFF << 0).toString(16),
     id: Date.now(), // Using the current timestamp as an ID
     llmParams: {...llmParams.value},
   };
-  console.log('llm:addParticipant', newParticipant);
   emit('add-participant', newParticipant);
 }
 
@@ -153,7 +153,11 @@ const accordionItems = [
 const models = [
   {
     name: "gpt-4o-mini",
-    id: "@openai/gpt-4o-mini",
+    id: "@openai/gpt-4o-mini-2024-07-18",
+  },
+  {
+    name: "gpt-4o",
+    id: "@openai/gpt-4o-2024-08-06",
   },
   {
     name: 'deepseek-coder-6.7b-base-awq',

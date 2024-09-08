@@ -22,9 +22,9 @@
         <tr v-for="participant in chatParticipants" :key="participant.id">
           <td class="px-2 py-2 whitespace-nowrap">
             <UPopover mode="hover">
-              <Icon :name="`${participant.icon}`" :style="`color:${participant.iconColor}`"/>
+              <UIcon :name="`${participant.icon}`" :style="`color:${participant.iconColor}`"/>
               <template #panel>
-                <tr v-for="(value, key, index) in participant.llmParams" :key="key">
+                <tr v-for="(value, key) in participant.llmParams" :key="key">
                   <td>{{key}}: {{value}}</td>
                 </tr>
                 Joined: <NuxtTime :datetime="participant.id" month="long" day="numeric" hour="numeric" minute="numeric" second="numeric" />
@@ -54,7 +54,7 @@ defineProps({
   }
 });
 
-const emit = defineEmits<{
+defineEmits<{
   clearParticipants: [];
 }>();
 

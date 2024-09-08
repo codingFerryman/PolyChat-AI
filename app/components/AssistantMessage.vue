@@ -6,11 +6,12 @@
 import { parseMarkdown } from '#imports';
 
 const props = defineProps<{
+  namecard: string;
   content: string;
 }>();
 
 const { data: ast, refresh } = await useAsyncData(useId(), () =>
-  parseMarkdown(props.content)
+  parseMarkdown(props.namecard + " \n\n" + props.content)
 );
 
 watch(

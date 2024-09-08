@@ -6,7 +6,7 @@
         <UButton
             color="gray"
             icon="i-heroicons-trash"
-            @click="$emit('clear')"
+            @click="$emit('clearHistory')"
         />
       </UTooltip>
     </div>
@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 defineEmits([
-  'clear',
+  'clearHistory',
   'showDrawer'
 ]);
 

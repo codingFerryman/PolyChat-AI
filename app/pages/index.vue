@@ -26,7 +26,9 @@
       <ChatPanel
           :chat-history="chatHistory"
           :loading="loading"
+          @clear-history="clearHistory"
           @show-drawer="isDrawerOpen = true"
+          @init-chat="initChat"
       />
     </div>
     <UDivider class="hidden md:block" orientation="vertical"/>
@@ -42,7 +44,7 @@
 
 <script lang="ts" setup>
 import {reactive, ref} from 'vue';
-import type {ChatMessage, LlmParams, LoadingType, Participant} from '~~/types';
+import type {ParticipantChatMessage, ChatMessage, LlmParams, LoadingType, Participant} from '~~/types';
 import {useChat} from '~~/app/composables/useChat';
 
 const isDrawerOpen = ref(false);
@@ -66,8 +68,9 @@ const modSettings: LlmParams = {
 const modInitMessage: string = "Please make the role-play card which summarizes the role of a participant. The card should be concise and has no more than 3 words. Please only return the content of the card. The role-play to summarize:"
 
 const llmParams = reactive<LlmParams>({...defaultSettings});
-const chatHistory = ref<ChatMessage[]>([]);
-const modChatHistory = ref<ChatMessage[]>([]);
+const chatHistory = ref<ParticipantChatMessage[]>([]);
+// const participantHistory = ref<Participant[]>([]);
+// const modChatHistory = ref<ParticipantChatMessage[]>([]);
 const chatParticipants = ref<Participant[]>([]);
 const loading = ref<LoadingType>('idle');
 
@@ -75,66 +78,78 @@ const resetSettings = () => {
   Object.assign(llmParams, defaultSettings);
 };
 
-const addParticipant = async (newParticipant: Participant) => {
-  console.log('index:addParticipant', newParticipant)
+const clearHistory = () => {
+  chatHistory.value = [];
+}
 
-  await sendMessageToParticipant(
+const addParticipant = async (newParticipant: Participant) => {
+  newParticipant.role = await sendMessageToParticipant(
       [modInitMessage, newParticipant.llmParams.systemPrompt].join(' '),
       true,
+      newParticipant,
       modSettings
   )
-  newParticipant.role = modChatHistory.value.at(-1).content
 
   chatParticipants.value.push(newParticipant);
 };
 
-const {getResponse, streamResponse} = useChat();
+const {getResponse} = useChat();
 
-async function sendMessageToParticipant(message: string, isMod: boolean = false, thisLlmParams?: LlmParams) {
-  thisLlmParams = thisLlmParams ?? llmParams;
-  const history = isMod ? modChatHistory : chatHistory;
-  history.value.push({role: 'user', content: message});
+let count = 0;
+async function initChat() {
+  if (chatParticipants.value.length === 0) {
+    return;
+  }
+  // await sendMessageToParticipant("", false, participant, participant.llmParams);
+  // while (count < 2) {
+  const index = count % chatParticipants.value.length;
 
+  const response = await sendMessageToParticipant("", false, chatParticipants.value[index], chatParticipants.value[index].llmParams);
+  chatHistory.value.push({
+    participant: chatParticipants.value[index],
+    role: 'assistant',
+    content: response
+  });
+  count++;
+  // }
+}
+
+async function sendMessageToParticipant(message: string, isMod: boolean = false, participant: Participant, thisLlmParams: LlmParams) {
   try {
-    if (thisLlmParams.stream) {
-      loading.value = 'stream';
-      const messageGenerator = streamResponse(
-          thisLlmParams.model.startsWith('@openai') ? '/api/openai' : '/api/nuxthub',
-          history.value,
-          thisLlmParams
-      );
-
-      let responseAdded = false;
-      for await (const chunk of messageGenerator) {
-        if (responseAdded) {
-          // add the response to the current message
-          history.value[history.value.length - 1]!.content += chunk;
-        } else {
-          // add a new message to the chat history
-          history.value.push({
-            role: 'assistant',
-            content: chunk,
-          });
-
-          responseAdded = true;
-        }
-      }
-    } else {
-      loading.value = 'message';
-      const response = await getResponse(
-          thisLlmParams.model.startsWith('@openai') ? '/api/openai' : '/api/nuxthub',
-          history.value,
-          thisLlmParams
-      );
-
-      history.value.push({role: 'assistant', content: response});
-    }
+    loading.value = 'message';
+    const processedHistory = processHistory(chatHistory.value, message, participant, isMod);
+    return await getResponse(
+        thisLlmParams.model.startsWith('@openai') ? '/api/openai' : '/api/nuxthub',
+        processedHistory,
+        thisLlmParams
+    );
   } catch (error) {
     console.error('Error sending message:', error);
   } finally {
     loading.value = 'idle';
   }
 
+}
+
+function processHistory(history: ParticipantChatMessage[], newMessage: string, participant: Participant, isMod: boolean) {
+  const tempHistory = ref<ChatMessage[]>([]);
+  if (isMod) {
+    tempHistory.value.push({role: 'system', content: modSettings.systemPrompt});
+  } else {
+    tempHistory.value.push({role: 'system', content: participant.llmParams.systemPrompt});
+  }
+  history.forEach((message) => {
+    if (message.participant === participant) {
+      tempHistory.value.push({role: 'assistant', content: '*' + message.participant.role + '*: ' + message.content});
+    } else {
+      tempHistory.value.push({role: 'user', content: '*' + message.participant.role + '*: ' + message.content});
+    }
+  });
+  if (newMessage.length > 0) {
+    tempHistory.value.push({role: 'user', content: '*' + participant.role + '*: ' + newMessage});
+  }
+
+  return tempHistory.value;
 }
 
 </script>

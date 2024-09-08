@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col h-full bg-gray-50 dark:bg-gray-950">
     <ChatHeader
+        :clear-disabled="chatHistory.length === 0"
+        @clear-history="$emit('clearHistory')"
         @show-drawer="$emit('showDrawer')"
     />
     <UDivider />
@@ -10,28 +12,18 @@
           :key="`message-${index}`"
           class="flex items-start gap-x-4"
       >
-        <div
-            class="w-12 h-12 p-2 rounded-full"
-            :class="`${
-            message.role === 'user' ? 'bg-primary/20' : 'bg-blue-500/20'
-          }`"
-        >
-          <UIcon
-              :name="`${
-              message.role === 'user'
-                ? 'i-heroicons-sparkles-solid'
-                : 'i-heroicons-sparkles-solid'
-            }`"
-              class="w-8 h-8"
-              :class="`${
-              message.role === 'user' ? 'text-red-400' : 'text-blue-400'
-            }`"
-          />
-        </div>
-        <div v-if="message.role === 'user'">
-          {{ message.content }}
-        </div>
-        <AssistantMessage v-else :content="message.content" />
+<!--        <div-->
+<!--            class="w-12 h-12 p-2 rounded-full"-->
+<!--            :class="`${-->
+<!--            message.role === 'user' ? 'bg-primary/20' : 'bg-blue-500/20'-->
+<!--          }`"-->
+<!--        >-->
+        <UIcon v-if="message.participant" class="w-8 h-8 p-2 rounded-full" :name="`${message.participant.icon}`" :style="`color:${message.participant.iconColor}`"/>
+<!--        </div>-->
+<!--        <div v-if="">-->
+<!--          {{ message.content }}-->
+<!--        </div>-->
+        <AssistantMessage v-if="message.participant" :namecard="message.participant.llmParams.model + ' (' + message.participant.role + ')'" :content="message.content" />
       </div>
       <ChatLoadingSkeleton v-if="loading === 'message'" />
       <NoChats v-if="chatHistory.length === 0" class="h-full" />
@@ -39,14 +31,21 @@
     <UDivider />
     <div class="flex items-start p-3.5 relative">
       <UButton
+          v-if="chatHistory.length === 0"
+          :disabled="loading !== 'idle'"
           label="Initiate Chat"
-          :disabled="chatHistory.length != 0 || loading !== 'idle'"
+          @click="initiateChat"
+      />
+      <UButton
+          v-else
+          :disabled="loading !== 'idle'"
+          label="Continue"
           @click="initiateChat"
       />
 <!--      <UButton-->
 <!--          label="Clear History"-->
 <!--          :disabled="chatHistory.length === 0 || loading !== 'idle'"-->
-<!--          @click="$emit('clearHistory')"-->
+<!--          @click="$emit('clear')"-->
 <!--      />-->
     </div>
 
@@ -73,31 +72,33 @@
 <!--      />-->
 <!--    </div>-->
   </div>
-  <div ref="chatContainer">
-    <div v-for="message in chatHistory" :key="message.id">
-      <p>
-        <strong>{{ message.role }}</strong>: {{ message.content }}
-      </p>
-    </div>
-  </div>
+<!--  <div ref="chatContainer">-->
+<!--    <div v-for="message in chatHistory" :key="message.id">-->
+<!--      <p>-->
+<!--        <strong>{{ message.role }}</strong>: {{ message.content }}-->
+<!--      </p>-->
+<!--    </div>-->
+<!--  </div>-->
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import type {ChatMessage, LoadingType} from '~~/types';
+import type {ParticipantChatMessage, LoadingType} from '~~/types';
 
 defineProps<{
-  chatHistory: ChatMessage[];
+  chatHistory: ParticipantChatMessage[];
+  // participantHistory: Participant[];
   loading: LoadingType;
 }>();
 
+
 const emit = defineEmits<{
-  message: [message: string];
-  // clearHistory: [];
+  // message: [message: string];
+  initChat: [];
+  clearHistory: [];
   showDrawer: [];
 }>();
 
-const userMessage = ref('');
 const chatContainer = ref<HTMLElement | null>(null);
 let observer: MutationObserver | null = null;
 
@@ -123,19 +124,11 @@ onUnmounted(() => {
   }
 });
 
+
 const initiateChat = () => {
-  // if (!userMessage.value.trim()) return;
+  // const initMessage: string = "Start!";
+  emit('initChat');
 
-  emit('message', "Start the role play!");
-
-  // userMessage.value = '';
 };
 
-const sendMessage = () => {
-  if (!userMessage.value.trim()) return;
-
-  emit('message', userMessage.value);
-
-  userMessage.value = '';
-};
 </script>

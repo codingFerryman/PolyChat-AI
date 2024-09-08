@@ -12,6 +12,12 @@ export type LlmParams = {
   // participantId: string;
 };
 
+export type ParticipantChatMessage = {
+  participant?: Participant;
+  role: string;
+  content: string;
+};
+
 export type ChatMessage = {
   role: string;
   content: string;
