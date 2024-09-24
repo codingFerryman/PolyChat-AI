@@ -119,7 +119,7 @@ async function sendMessageToParticipant(message: string, isMod: boolean = false,
     loading.value = 'message';
     const processedHistory = processHistory(chatHistory.value, message, participant, isMod);
     return await getResponse(
-        thisLlmParams.model.startsWith('@openai') ? '/api/openai' : '/api/nuxthub',
+        '/api/cloudflareAiGateway',
         processedHistory,
         thisLlmParams
     );
@@ -133,7 +133,7 @@ async function sendMessageToParticipant(message: string, isMod: boolean = false,
 
 function processHistory(history: ParticipantChatMessage[], newMessage: string, participant: Participant, isMod: boolean) {
   const tempHistory = ref<ChatMessage[]>([]);
-  if (isMod) {
+  if (isMod) {  // TODO: check if this leads to duplicated system prompts
     tempHistory.value.push({role: 'system', content: modSettings.systemPrompt});
   } else {
     tempHistory.value.push({role: 'system', content: participant.llmParams.systemPrompt});
