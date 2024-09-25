@@ -1,154 +1,148 @@
 <template>
   <div class="h-full flex flex-col overflow-hidden">
+    <!-- Header -->
     <div class="flex items-center justify-between px-4 h-14">
-      <div class="flex items-center gap-x-4">
-        <h2 class="md:text-lg text-gray-600 dark:text-gray-300">
-          LLM Settings
-        </h2>
-      </div>
+      <h2 class="md:text-lg text-gray-600 dark:text-gray-300">
+        LLM Settings
+      </h2>
       <UButton
-          class="md:hidden"
           color="gray"
           icon="i-heroicons-x-mark-20-solid"
           variant="ghost"
-          @click="$emit('hideDrawer')"
+          @click="closeModal"
       />
     </div>
     <UDivider/>
-    <div class="p-4 flex-1 space-y-6 overflow-y-auto">
-      <UFormGroup label="Model">
-        <USelectMenu
-            v-model="llmParams.model"
-            :options="models"
-            option-attribute="name"
-            size="md"
-            value-attribute="id"
-        />
-      </UFormGroup>
 
-      <RangeInput
-          v-model="llmParams.temperature"
-          :max="5"
-          :min="0"
-          :step="0.1"
-          label="Temperature"
-      />
-
-      <RangeInput
-          v-model="llmParams.maxTokens"
-          :max="4096"
-          :min="1"
-          label="Max Tokens"
-      />
-
-      <UFormGroup label="System Prompt (Persona)">
-        <UTextarea
-            v-model="llmParams.systemPrompt"
-            :maxrows="8"
-            :rows="3"
-            autoresize
-        />
-      </UFormGroup>
-
-      <!--      <div class="flex items-center justify-between">-->
-      <!--        <span>Stream Response</span>-->
-      <!--        <UToggle v-model="llmParams.stream" :disabled="llmParams.model.startsWith('@openai')" />-->
-      <!--&lt;!&ndash;       TODO: implement streaming for openai models&ndash;&gt;-->
-      <!--      </div>-->
-
-      <UAccordion
-          :items="accordionItems"
-          color="white"
-          size="md"
-          variant="solid"
-      >
-        <template #item>
-          <UCard :ui="{ body: { base: 'space-y-6', padding: 'p-4 sm:p-4' } }">
-            <RangeInput
-                v-model="llmParams.topP"
-                :max="2"
-                :min="0"
-                :step="0.1"
-                label="Top P"
+    <!-- Main Content -->
+    <div class="p-4 flex-1 overflow-y-auto">
+      <div class="flex flex-row space-x-4">
+        <!-- Left Column -->
+        <div class="w-1/2 space-y-6">
+          <!-- Model Selection -->
+          <UFormGroup label="Model">
+            <USelectMenu
+                v-model="llmParams.model"
+                :options="models"
+                option-attribute="name"
+                size="md"
+                value-attribute="id"
             />
+          </UFormGroup>
 
-            <RangeInput
-                v-model="llmParams.topK"
-                :hidden="llmParams.model.startsWith('@openai')"
-                :max="50"
-                :min="1"
-                label="Top K"
+          <!-- Temperature -->
+          <RangeInput
+              v-model="llmParams.temperature"
+              :max="5"
+              :min="0"
+              :step="0.1"
+              label="Temperature"
+          />
+
+          <!-- Max Tokens -->
+          <RangeInput
+              v-model="llmParams.maxTokens"
+              :max="4096"
+              :min="1"
+              label="Max Tokens"
+          />
+
+          <!-- System Prompt -->
+          <UFormGroup label="System Prompt (Persona)">
+            <UTextarea
+                v-model="llmParams.systemPrompt"
+                :maxrows="8"
+                :rows="3"
+                autoresize
             />
+          </UFormGroup>
+        </div>
 
-            <RangeInput
-                v-model="llmParams.frequencyPenalty"
-                :max="2"
-                :min="0"
-                :step="0.1"
-                label="Frequency Penalty"
-            />
+        <!-- Right Column -->
+        <div class="w-1/2 space-y-6">
+              <UCard :ui="{ body: { base: 'space-y-6', padding: 'p-4 sm:p-4' } }">
+                <!-- Top P -->
+                <RangeInput
+                    v-model="llmParams.topP"
+                    :max="2"
+                    :min="0"
+                    :step="0.1"
+                    label="Top P"
+                />
 
-            <RangeInput
-                v-model="llmParams.presencePenalty"
-                :max="2"
-                :min="0"
-                :step="0.1"
-                label="Presence Penalty"
-            />
-          </UCard>
-        </template>
-      </UAccordion>
+                <!-- Top K -->
+                <RangeInput
+                    v-model="llmParams.topK"
+                    :hidden="llmParams.model.startsWith('@openai')"
+                    :max="50"
+                    :min="1"
+                    label="Top K"
+                />
 
+                <!-- Frequency Penalty -->
+                <RangeInput
+                    v-model="llmParams.frequencyPenalty"
+                    :max="2"
+                    :min="0"
+                    :step="0.1"
+                    label="Frequency Penalty"
+                />
+
+                <!-- Presence Penalty -->
+                <RangeInput
+                    v-model="llmParams.presencePenalty"
+                    :max="2"
+                    :min="0"
+                    :step="0.1"
+                    label="Presence Penalty"
+                />
+              </UCard>
+<!--            </template>-->
+<!--          </UAccordion>-->
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons at the Bottom -->
+    <div class="flex justify-center space-x-8 p-1">
       <UButton
-          block
           color="gray"
           size="sm"
           @click="$emit('reset')"
-      >Reset settings
-      </UButton>
+      >Reset</UButton>
       <UButton
-          block
           color="orange"
           size="sm"
           @click="addParticipant"
-      >Join
-      </UButton>
-    </div>
-    <div class="p-2">
-      <UButton
-          color="gray" rel="noopener" size="sm" target="_blank" to="https://hub.nuxt.com?utm_source=hub-chat"
-          variant="link">Hosted on NuxtHub
-      </UButton>
+      >Join</UButton>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type {LlmParams, Participant} from '~~/types';
+import type { LlmParams, Participant } from '~~/types';
 
 const llmParams = defineModel('llmParams', {
   type: Object as () => LlmParams,
   required: true,
 });
 
-const emit = defineEmits(['hideDrawer', 'reset', 'add-participant']);
+const emit = defineEmits(['reset', 'add-participant', 'close']);
+
+function closeModal() {
+  emit('close');
+}
 
 function addParticipant() {
   const newParticipant: Participant = {
     icon: 'i-heroicons-sparkles',
-    iconColor: '#' + (Math.random() * 0xFFFFFF << 0).toString(16),
-    id: Date.now(), // Using the current timestamp as an ID
-    llmParams: {...llmParams.value},
+    iconColor: '#' + ((Math.random() * 0xffffff) << 0).toString(16),
+    id: Date.now(),
+    llmParams: { ...llmParams.value },
   };
   emit('add-participant', newParticipant);
+  emit('close');
 }
-
-const accordionItems = [
-  {
-    label: 'Advanced Settings',
-    defaultOpen: false,
-  },
-];
 
 const models = [
   {

@@ -5,11 +5,18 @@
         <h2 class="md:text-lg text-gray-600 dark:text-gray-300">
           Participants
         </h2>
+        <UTooltip text="Add participant">
+          <UButton
+            color="gray"
+            icon="i-heroicons-plus"
+            @click="$emit('showLlmSettings')"
+          />
+        </UTooltip>
         <UTooltip v-if="chatParticipants.length > 0" text="Clear participants">
           <UButton
-              color="gray"
-              icon="i-heroicons-trash"
-              @click="$emit('clearParticipants')"
+             color="gray"
+             icon="i-heroicons-trash"
+             @click="$emit('clearParticipants')"
           />
         </UTooltip>
       </div>
@@ -56,6 +63,7 @@ defineProps({
 
 defineEmits<{
   clearParticipants: [];
+  showLlmSettings: [];
 }>();
 
 
