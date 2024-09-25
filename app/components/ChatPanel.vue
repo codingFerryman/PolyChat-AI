@@ -12,17 +12,7 @@
           :key="`message-${index}`"
           class="flex items-start gap-x-4"
       >
-<!--        <div-->
-<!--            class="w-12 h-12 p-2 rounded-full"-->
-<!--            :class="`${-->
-<!--            message.role === 'user' ? 'bg-primary/20' : 'bg-blue-500/20'-->
-<!--          }`"-->
-<!--        >-->
         <UIcon v-if="message.participant" class="w-8 h-8 p-2 rounded-full" :name="`${message.participant.icon}`" :style="`color:${message.participant.iconColor}`"/>
-<!--        </div>-->
-<!--        <div v-if="">-->
-<!--          {{ message.content }}-->
-<!--        </div>-->
         <AssistantMessage v-if="message.participant" :namecard="message.participant.llmParams.model + ' (' + message.participant.role + ')'" :content="message.content" />
       </div>
       <ChatLoadingSkeleton v-if="loading === 'message'" />
@@ -87,13 +77,11 @@ import type {ParticipantChatMessage, LoadingType} from '~~/types';
 
 defineProps<{
   chatHistory: ParticipantChatMessage[];
-  // participantHistory: Participant[];
   loading: LoadingType;
 }>();
 
 
 const emit = defineEmits<{
-  // message: [message: string];
   initChat: [];
   clearHistory: [];
   showDrawer: [];
