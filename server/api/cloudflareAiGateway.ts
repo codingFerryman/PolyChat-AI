@@ -65,15 +65,7 @@ export default defineEventHandler(async (event) => {
             return sendStream(event, stream);
         } else {
             const responseData = response.data;
-
-            // Since the response is an array of responses, extract the first item
-            if (params.model.startsWith('@cf') && Array.isArray(responseData) && responseData.length > 0) {
-                return responseData[0];
-            } else if (params.model.startsWith('@openai') && typeof responseData === 'object') {
-                return responseData['choices'][0]['message']['content'];
-            } else {
-                throw new Error('Invalid service provider or response data');
-            }
+            return responseData['choices'][0]['message']['content'];
         }
     } catch (error) {
         console.error(error);
