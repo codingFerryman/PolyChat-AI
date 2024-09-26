@@ -43,6 +43,7 @@
           :chat-participants="chatParticipants"
           @clear-participants="chatParticipants = []"
           @show-llm-settings="showLlmSettings = true"
+          @remove-participant="removeParticipant"
       />
     </div>
   </div>
@@ -108,6 +109,12 @@ const addParticipant = async (newParticipant: Participant) => {
 
   // Hide the modal after adding the participant
   showLlmSettings.value = false;
+};
+
+const removeParticipant = (id: number) => {
+  chatParticipants.value = chatParticipants.value.filter(
+      (participant) => participant.id !== id
+  );
 };
 
 const { getResponse } = useChat();

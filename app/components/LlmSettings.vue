@@ -2,14 +2,15 @@
   <div class="h-full flex flex-col overflow-hidden">
     <!-- Header -->
     <div class="flex items-center justify-between px-4 h-14">
+      <h2 class="text-xl md:text-2xl text-primary font-bold">LLM Settings</h2>
       <h2 class="md:text-lg text-gray-600 dark:text-gray-300">
         LLM Settings
       </h2>
       <UButton
-          color="gray"
-          icon="i-heroicons-x-mark-20-solid"
-          variant="ghost"
-          @click="closeModal"
+        color="gray"
+        icon="i-heroicons-x-mark-20-solid"
+        variant="ghost"
+        @click="closeModal"
       />
     </div>
     <UDivider/>
@@ -60,6 +61,7 @@
 
         <!-- Right Column -->
         <div class="w-1/2 space-y-6">
+          <UFormGroup label="Advanced Settings">
               <UCard :ui="{ body: { base: 'space-y-6', padding: 'p-4 sm:p-4' } }">
                 <!-- Top P -->
                 <RangeInput
@@ -97,6 +99,7 @@
                     label="Presence Penalty"
                 />
               </UCard>
+          </UFormGroup>
         </div>
       </div>
     </div>

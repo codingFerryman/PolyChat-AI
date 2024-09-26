@@ -44,6 +44,14 @@
           <td class="px-4 py-4 whitespace-nowrap">
             {{ participant.llmParams.model.split("/").at(-1) }}
           </td>
+          <td class="px-4 py-4">
+            <UButton
+                color="red"
+                icon="i-heroicons-trash"
+                variant="ghost"
+                @click="removeParticipant(participant.id)"
+            />
+          </td>
         </tr>
         </tbody>
       </table>
@@ -54,6 +62,10 @@
 <script lang="ts" setup>
 import type {Participant} from '~~/types';
 
+function removeParticipant(id: number) {
+  emit('removeParticipant', id);
+}
+
 defineProps({
   chatParticipants: {
     type: Array as PropType<Participant[]>,
@@ -61,9 +73,10 @@ defineProps({
   }
 });
 
-defineEmits<{
+const emit = defineEmits<{
   clearParticipants: [];
   showLlmSettings: [];
+  removeParticipant: [id: number];
 }>();
 
 
