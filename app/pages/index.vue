@@ -1,9 +1,9 @@
 <template>
-  <div class="h-dvh flex flex-col md:flex-row">
+  <div class="h-screen flex" :style="componentStyles.container">
     <!-- Modal -->
     <div v-if="showLlmSettings" class="fixed inset-0 flex items-center justify-center z-50">
       <!-- Background overlay -->
-      <div class="absolute inset-0 bg-black opacity-50" @click="showLlmSettings = false"/>
+      <div class="absolute inset-0 bg-black opacity-50" @click="showLlmSettings = false" />
       <!-- Modal content -->
       <div class="bg-white dark:bg-gray-800 p-8 rounded shadow-lg z-10 w-11/12 md:w-5/6 lg:w-1/2 max-w-5xl">
         <LlmSettings
@@ -15,8 +15,8 @@
       </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="flex-grow md:w-2/3 lg:w-3/4">
+    <!-- Main Container -->
+    <div :style="componentStyles.chatPanel">
       <ChatPanel
           :chat-history="chatHistory"
           :loading="loading"
@@ -26,10 +26,19 @@
       />
     </div>
 
-    <UDivider class="hidden md:block" orientation="vertical"/>
+    <!-- Resizable Divider -->
+    <div
+        :style="componentStyles.divider"
+        class="divider"
+        @mousedown.prevent="startResize"
+    >
+      <div class="divider-icon">
+        <UIcon :name="isLandscape ? 'i-mdi-drag-vertical-variant' : 'i-mdi-drag-horizontal-variant'" />
+      </div>
+    </div>
 
     <!-- Participants -->
-    <div class="h-dvh md:block md:w-1/3 lg:w-1/4">
+    <div :style="componentStyles.chatParticipants">
       <ChatParticipants
           :chat-participants="chatParticipants"
           @clear-participants="chatParticipants = []"
@@ -40,8 +49,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
-import type { ParticipantChatMessage, ChatMessage, LlmParams, LoadingType, Participant } from '~~/types';
+import { ref, reactive, computed } from 'vue';
+import { useMediaQuery } from '@vueuse/core';
+import type {
+  ParticipantChatMessage,
+  ChatMessage,
+  LlmParams,
+  LoadingType,
+  Participant,
+} from '~~/types';
 import { useChat } from '~~/app/composables/useChat';
 
 const isDrawerOpen = ref(false);
@@ -165,14 +181,117 @@ function processHistory(
 
   return tempHistory.value;
 }
+
+// Resizable Logic
+const chatPanelSize = ref(75); // Percentage
+const chatParticipantsSize = ref(25); // Percentage
+
+// Use useMediaQuery from @vueuse/core to detect orientation
+const isLandscape = useMediaQuery('(orientation: landscape)');
+
+// Computed styles for components
+const componentStyles = computed(() => {
+  const dividerBaseStyle = {
+    backgroundColor: 'var(--divider-color, rgba(0, 0, 0, 0.1))', // Adjust the color as needed
+    userSelect: 'none',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
+
+  if (isLandscape.value) {
+    return {
+      container: {
+        flexDirection: 'row',
+      },
+      chatPanel: {
+        flexBasis: chatPanelSize.value + '%',
+        overflow: 'hidden',
+      },
+      chatParticipants: {
+        flexBasis: chatParticipantsSize.value + '%',
+        overflow: 'hidden',
+      },
+      divider: {
+        ...dividerBaseStyle,
+        width: '2px', // Thinner divider
+        cursor: 'col-resize',
+      },
+    };
+  } else {
+    return {
+      container: {
+        flexDirection: 'column',
+      },
+      chatPanel: {
+        flexBasis: chatPanelSize.value + '%',
+        overflow: 'hidden',
+      },
+      chatParticipants: {
+        flexBasis: chatParticipantsSize.value + '%',
+        overflow: 'hidden',
+      },
+      divider: {
+        ...dividerBaseStyle,
+        height: '2px', // Thinner divider
+        cursor: 'row-resize',
+      },
+    };
+  }
+});
+
+// Resizing logic
+const isResizing = ref(false);
+
+const startResize = () => {
+  isResizing.value = true;
+  if (import.meta.client) {
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', stopResize);
+  }
+};
+
+const onMouseMove = (event) => {
+  if (!isResizing.value) return;
+
+  if (isLandscape.value) {
+    const deltaX = event.movementX;
+    const totalWidth = document.body.clientWidth;
+    const deltaPercent = (deltaX / totalWidth) * 100;
+
+    let newChatPanelSize = chatPanelSize.value + deltaPercent;
+    newChatPanelSize = Math.min(Math.max(newChatPanelSize, 10), 90); // Clamp between 10% and 90%
+    chatPanelSize.value = newChatPanelSize;
+    chatParticipantsSize.value = 100 - newChatPanelSize;
+  } else {
+    const deltaY = event.movementY;
+    const totalHeight = document.body.clientHeight;
+    const deltaPercent = (deltaY / totalHeight) * 100;
+
+    let newChatPanelSize = chatPanelSize.value + deltaPercent;
+    newChatPanelSize = Math.min(Math.max(newChatPanelSize, 10), 90); // Clamp between 10% and 90%
+    chatPanelSize.value = newChatPanelSize;
+    chatParticipantsSize.value = 100 - newChatPanelSize;
+  }
+};
+
+const stopResize = () => {
+  isResizing.value = false;
+  if (import.meta.client) {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', stopResize);
+  }
+};
 </script>
 
-<!--<style scoped>-->
-<!--.modal-overlay {-->
-<!--  /* Optional: Customize your modal overlay styles here */-->
-<!--}-->
+<style scoped>
+.divider {
+  position: relative;
+}
 
-<!--.modal-container {-->
-<!--  /* Optional: Customize your modal container styles here */-->
-<!--}-->
-<!--</style>-->
+.divider-icon > svg {
+  width: 16px;
+  height: 16px;
+}
+
+</style>

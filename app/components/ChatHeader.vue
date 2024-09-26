@@ -19,13 +19,6 @@
           to="https://github.com/codingFerryman/ai-chatroom"
           target="_blank"
       />
-      <UButton
-          icon="i-heroicons-cog-6-tooth"
-          color="gray"
-          variant="ghost"
-          class="md:hidden"
-          @click="$emit('showDrawer')"
-      />
     </div>
   </div>
 </template>

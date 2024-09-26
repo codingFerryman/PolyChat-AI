@@ -97,8 +97,6 @@
                     label="Presence Penalty"
                 />
               </UCard>
-<!--            </template>-->
-<!--          </UAccordion>-->
         </div>
       </div>
     </div>
