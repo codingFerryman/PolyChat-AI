@@ -22,10 +22,10 @@
       </div>
     </div>
     <UDivider/>
-    <div class="p-4 flex-1 space-y-6 overflow-y-auto">
-      <table class="min-w-full divide-y divide-gray-200">
+    <div class="p-1 flex-1 space-y-6 overflow-y-auto">
+      <table class="min-w-full">
         <thead class="bg-gray-50"/>
-        <tbody class="divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-800">
         <tr v-for="participant in chatParticipants" :key="participant.id">
           <td class="px-2 py-2 whitespace-nowrap">
             <UPopover mode="hover">
