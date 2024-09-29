@@ -7,9 +7,7 @@ export type LlmParams = {
   frequencyPenalty?: number;
   presencePenalty?: number;
   systemPrompt?: string;
-  // initialPrompt?: string;
   stream: boolean;
-  // participantId: string;
 };
 
 export type ParticipantChatMessage = {
