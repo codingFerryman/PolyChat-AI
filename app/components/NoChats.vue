@@ -5,7 +5,6 @@
         data-name="Layer 1"
         class="w-64 h-48"
         viewBox="0 0 783.86048 582"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
     >
       <path
           id="e5e37569-bd8f-45f7-97a1-e817a6c74118-77"
@@ -187,7 +186,7 @@
       />
     </svg>
     <div class="text-center text-gray-500 dark:text-gray-400">
-      Sleeping zzZZzzZzzz
+      Empty room
     </div>
   </div>
 </template>

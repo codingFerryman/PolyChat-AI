@@ -23,6 +23,7 @@
           @clear-history="clearHistory"
           @show-drawer="isDrawerOpen = true"
           @init-chat="initChat"
+          @send-user-message="sendUserMessage"
       />
     </div>
 
@@ -58,7 +59,7 @@ const isDrawerOpen = ref(false);
 const showLlmSettings = ref(false);
 
 const defaultSettings: LlmParams = {
-  model: '@cf/meta/llama-3.1-8b-instruct',
+  model: '@cf/meta/llama-3.2-3b-instruct',
   temperature: 0.6,
   maxTokens: 512,
   systemPrompt: 'You are a helpful assistant.',
@@ -89,11 +90,11 @@ const modInitMessage: string = "" +
     "- Be no more than three words.\n" +
     "- Capture the essence of the character effectively.\n" +
     "- Contain only the name or title without any additional explanations or text.\n" +
-    "- In plain text.\n" +
+    "- In plain text with no formatting.\n" +
     "\n" +
     "Please provide only the content of the name card.\n" +
     "\n" +
-    "**Participant's System Prompt to Summarize:**\n"
+    "Participant's System Prompt to Summarize:\n"
 
 const llmParams = reactive<LlmParams>({...defaultSettings});
 const chatHistory = ref<ParticipantChatMessage[]>([]);
@@ -152,6 +153,14 @@ async function initChat() {
   count++;
 }
 
+async function sendUserMessage(message: string, role: string) {
+  // const formattedUserMessage = `[${role}]: ${message}`;
+  chatHistory.value.push({
+    role: role,
+    content: message,
+  });
+}
+
 async function sendMessageToParticipant(
     message: string,
     isMod: boolean = false,
@@ -173,7 +182,8 @@ function processHistory(
     history: ParticipantChatMessage[],
     participant: Participant,
     isMod: boolean,
-    userMessage?: string
+    userMessage?: string,
+    userMessageRole: string = "User"
 ): ChatMessage[] {
   const tempHistory: ChatMessage[] = [];
 
@@ -191,7 +201,7 @@ function processHistory(
   // Process the chat history
   history.forEach((message) => {
     const sender = message.participant;
-    const senderRole = sender?.role || 'Unknown';
+    const senderRole = sender?.role || message.role;
     const messageContent = message.content || '';
 
     if (sender?.id === participant.id) {
@@ -213,7 +223,7 @@ function processHistory(
   // Include the optional user message
   if (userMessage && userMessage.length > 0) {
     // Assuming the user message is from an external user, include role label
-    const formattedUserMessage = `[User]: ${userMessage}`;
+    const formattedUserMessage = `[${userMessageRole}]: ${userMessage}`;
     tempHistory.push({role: 'user', content: formattedUserMessage});
   }
 

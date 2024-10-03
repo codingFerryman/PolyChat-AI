@@ -148,11 +148,11 @@ function addParticipant() {
 const models = [
   {
     name: "gpt-4o-mini",
-    id: "@openai/gpt-4o-mini-2024-07-18",
+    id: "@openai/gpt-4o-mini",
   },
   {
     name: "gpt-4o",
-    id: "@openai/gpt-4o-2024-08-06",
+    id: "@openai/gpt-4o",
   },
   {
     name: 'deepseek-coder-6.7b-base-awq',
@@ -198,6 +198,10 @@ const models = [
   {
     name: 'llama-3.1-8b-instruct-fp8',
     id: '@cf/meta/llama-3.1-8b-instruct-fp8',
+  },
+  {
+    name: 'llama-3.2-3b-instruct',
+    id: '@cf/meta/llama-3.2-3b-instruct',
   },
   {name: 'llamaguard-7b-awq', id: '@hf/thebloke/llamaguard-7b-awq'},
   {
