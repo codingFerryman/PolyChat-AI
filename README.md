@@ -1,10 +1,7 @@
 # PolyChat AI
-Uniting humans and multiple AI models in dynamic, collaborative conversations.
+A chatroom website that enables dynamic interactions between humans and multiple AI language models (LLMs).
 
 *This project is still a work in progress, more details and features are coming soon.*
-
-## Goal
-PolyChat AI is a web-based chatroom platform that enables dynamic interactions between humans and multiple AI language models (LLMs). Our goal is to create a versatile environment where AI models and human users can engage in conversations for various scenarios like board games, brainstorming sessions, and role-playing activities.
 
 ## Use Cases
 - **Board Games**: Simulate multiplayer board games with AI participants acting as players.
@@ -23,14 +20,14 @@ PolyChat AI is a web-based chatroom platform that enables dynamic interactions b
 * Human User Involvement
 
 
-* Upcoming Features / Work in Progress
-  * Security measures for API calls
-  * Demo website.
-  * Importing and Exporting Participant Profiles
-  * Importing and Exporting Chat History
-  * Streaming Responses
-  * Automated Participant Management / Scenario-Based Moderation
-  * Moderator as Judge
-  * Image API Integration
-  * Example Screenshots
-  * User Guidelines
+## Upcoming Features / WIP
+* Security measures for API calls
+* Demo website.
+* Importing and Exporting Participant Profiles
+* Importing and Exporting Chat History
+* Streaming Responses
+* Automated Participant Management / Scenario-Based Moderation
+* Moderator as Judge
+* Image API Integration
+* Example Screenshots
+* User Guidelines
