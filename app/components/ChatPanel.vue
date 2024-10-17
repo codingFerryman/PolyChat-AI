@@ -34,11 +34,6 @@
           Human User ({{message.role}}) <br>
           {{message.content}}
         </span>
-<!--        <AssistantMessage-->
-<!--            v-else-->
-<!--            :namecard="'Human User (' + message.role + ')'"-->
-<!--            :content="message.content"-->
-<!--        />-->
       </div>
       <ChatLoadingSkeleton v-if="loading === 'message'" />
       <NoChats v-if="chatHistory.length === 0" class="h-full" />
@@ -62,7 +57,7 @@
       />
       <UTextarea
           v-model="userMessage"
-          placeholder="Enter and send a message to join the chat. | Send an empty message will continue the chat."
+          placeholder="Enter and send a message to join the chat. | Sending an empty message will continue the conversation."
           class="w-full"
           :ui="{ padding: { xl: 'pr-11' } }"
           :rows="1"

@@ -185,8 +185,15 @@
           class="fill-gray-500"
       />
     </svg>
-    <div class="text-center text-gray-500 dark:text-gray-400">
-      Empty room
+    <div class="text-left text-gray-500 dark:text-gray-400">
+      Instructions:
+      <br> 1. Click the [+] button next to "Participants." Write a system prompt (persona) for each participant, then click "Join."
+      <br> 2. Repeat step 1 for all participants.
+      <br> 3. To start a new chat:
+      <br> &ensp; a. Click [▶].
+      <br> &ensp; b. If you want to join the chat as a human, select or create a role from the dropdown menu, write your message, and click [⬆].
     </div>
   </div>
 </template>
+<script setup lang="ts">
+</script>
