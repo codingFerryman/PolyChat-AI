@@ -192,6 +192,7 @@
       <br> 3. To start a new chat:
       <br> &ensp; a. Click [▶].
       <br> &ensp; b. If you want to join the chat as a human, select or create a role from the dropdown menu, write your message, and click [⬆].
+      <br> Note: Rate limiting is enabled. If you do not receive a response, please wait and try again later.
     </div>
   </div>
 </template>
